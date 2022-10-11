@@ -3,29 +3,29 @@ const http = require("http"),
   app = express(),
   socketIo = require("socket.io");
 const fs = require("fs");
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // On définit les constantes 
 
 mongoose.connect('mongodb+srv://louis:gm9H_.y6bu.UPmK@cluster0.nsvtase.mongodb.net/?retryWrites=true&w=majority', 
 {useNewUrlParser: true
 }).then(() => {
-    console.log('Connnexion réussie')
+    console.log('Connnexion réussie') // On se connecte à ma base de données en ligne MongoDB Atlas 
 }).catch((error) => {
     console.log(error);
 });
 
-const server = http.Server(app).listen(8080);
+const server = http.Server(app).listen(8080); // On définit le port du serveur 
 const io = socketIo(server);
 const clients = {};
 
-app.use(express.static(__dirname + "/../nodejsprojet/client/"));
+app.use(express.static(__dirname + "/../nodejsprojet/client/")); // Lier express avec les fichiers statiques 
 app.use(express.static(__dirname + "/../nodejsprojet/node_modules/"));
 
 app.get("/", (req, res) => {
   const stream = fs.createReadStream(__dirname + "/../nodejsprojet/client/index.html");
-  stream.pipe(res);
+  stream.pipe(res);  // On définit la route de base sur le fichier index.html
 });
 
-const addClient = socket => {
+const addClient = socket => { // On gère les utilisateurs avec les sockets
   console.log("New client connected", socket.id);
   clients[socket.id] = socket;
 };
@@ -50,10 +50,10 @@ io.sockets.on("connection", socket => {
   });
 });
 
-var players = {},
+var players = {}, // On stocke la variable joueur
   unmatched;
 
-function joinGame(socket) {
+function joinGame(socket) {  // Fonction pour commencer la partie
   players[socket.id] = {
     opponent: unmatched,
     symbol: "X",
